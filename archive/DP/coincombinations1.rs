@@ -1,19 +1,22 @@
 #![allow(unused)]
 use std::{cmp::min, collections::HashMap, io};
 
-fn coin_iter(money: i32, num_coins: i32, coins: &Vec<i32>) -> i64 {
-    const MOD: i64 = i64::pow(10, 9) + 7;
-    let mut arr: Vec<i64> = vec![0; (money + 1) as usize];
-    arr[0] = 1;
+fn coin_iter(money: i32, num_coins: i32, coins: &Vec<i32>) -> u64 {
+    const MOD: u64 = u64::pow(10, 9) + 7;
+    let mut arr: Vec<u64> = Vec::new();
+    arr.push(1);
 
-    for j in 0..num_coins {
-        for i in 1..=money {
+    for i in 1..=money {
+        let mut n = 0;
+        for j in 0..num_coins {
             let prev = i - coins[j as usize];
-            if prev >= 0 {
-                arr[i as usize] += arr[prev as usize];
-                arr[i as usize] %= MOD;
+            if prev < 0 {
+                continue;
             }
+            n += arr[prev as usize];
         }
+
+        arr.push(n % MOD);
     }
 
     *arr.last().unwrap()
